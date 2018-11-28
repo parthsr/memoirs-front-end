@@ -25,6 +25,10 @@ export default {
   },
   message: {
     color: 'black'
+  },
+  scrollView: {
+    paddingBottom: 10,
+    height: '70%'
   }
 };
 

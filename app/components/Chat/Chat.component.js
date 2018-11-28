@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import style from '../Chat/Chat.style';
-import {Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 
 class Chat extends Component {
   render () {
@@ -14,9 +14,13 @@ class Chat extends Component {
         <Text style={style.owner}>{messages[i].text}</Text>
       </View>); 
     }
-    return (<View>
+    return (<ScrollView style={style.scrollView}
+      ref={(ref) => this.scrollView = ref}
+      onContentSizeChange={(contentWidth, contentHeight) => {        
+        this.scrollView.scrollToEnd({animated: true});
+      }}>
       {messagesView}
-    </View>);
+    </ScrollView>);
   }
 }
 
