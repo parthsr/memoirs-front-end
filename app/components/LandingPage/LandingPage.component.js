@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import socketIOClient from 'socket.io-client';
 import styles from './LandingPage.style';
-
 import {Button, Text, TextInput, View} from 'react-native';
+import {emit} from '../../service/Socket.service';
 import {noop} from 'lodash/noop';
 
 class LandingPage extends Component {
@@ -11,25 +10,27 @@ class LandingPage extends Component {
     super(props);
     this.state = {
       roomName: '',
-      errorApi: '',
-      socket: socketIOClient('http://localhost:8080/game')
+      clientName: ''
     };
   }
 
   onButtonPress = () => {
-    this.state.socket.emit('joinRoom', this.state.roomName);
-    this.setState({errorApi: ''});
-    // this.state.socket.on('confirmationRoom', (data) => console.log(data));
+    emit('joinRoom', this.state.roomName);
     this.props.navigation.navigate('ChatPage', {
       roomName: this.state.roomName,
-      socket: this.state.socket
+      clientName: this.state.clientName
     });
   }
 
-  onChangeText = (text) => {
-    const roomName = text;
+  onRoomChangeText = (text) => {
     this.setState({
-      roomName
+      roomName: text
+    });
+  }
+
+  onNameChangeText = (text) => {
+    this.setState({
+      clientName: text
     });
   }
 
@@ -38,9 +39,10 @@ class LandingPage extends Component {
       <View style={styles.container}>
         <Text style={styles.welcome}>Welcome to the game</Text>
         <Text style={styles.instructions}>To get started, enter the name of the room you want to play in.</Text>
-        <TextInput style={styles.input} onChangeText={this.onChangeText}/>
+        <TextInput style={styles.input} onChangeText={this.onRoomChangeText}/>
+        <Text style={styles.instructions}>To get started, enter your name.</Text>
+        <TextInput style={styles.input} onChangeText={this.onNameChangeText}/>
         <Button color = {styles.button.color} title= 'Press me please' onPress={this.onButtonPress}/>
-        <Text style={styles.instructions}>{this.state.errorApi}</Text>
       </View>
     );
   }

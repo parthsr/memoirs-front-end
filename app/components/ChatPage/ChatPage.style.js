@@ -1,4 +1,4 @@
-export default{
+export default {
   container: {
     flex: 1,
     justifyContent: 'center',

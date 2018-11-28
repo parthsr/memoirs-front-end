@@ -2,9 +2,9 @@ import Chat from '../Chat/Chat.component';
 import noop from 'lodash/noop';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import socketIOClient from 'socket.io-client';
 import styles from './ChatPage.style';
 import {Button, Text, TextInput, View} from 'react-native';
+import {emit, on} from '../../service/Socket.service';
 
 class ChatPage extends Component {
   constructor (props) {
@@ -13,29 +13,31 @@ class ChatPage extends Component {
       roomName: '',
       confirmationRoom: '',
       text: '',
-      socket: {},
       message: '',
-      messages: []
+      messages: [],
+      clientName: ''
     };
-
+    on('forwardMessageToRoom', (message) => {
+      this.recieveMessages(message);
+    });
   }
 
   componentDidMount = () => {
-    const roomName = this.props.navigation.getParam('roomName', 'default');
-    const socket = this.props.navigation.getParam('socket', socketIOClient(''));
-    this.setState({roomName, socket});
-    console.log('component did mount');
-    socket.on('confirmationRoom', (data) => this.setState({confirmationRoom: data}));
+    const roomName = this.props.navigation.getParam('roomName', '');
+    const clientName = this.props.navigation.getParam('clientName', '');
+    this.setState({roomName, clientName});
+    on('confirmationRoom', (data) => this.setState({confirmationRoom: data}));
   }
 
   onButtonPress = () => {
-    const messages = this.state.messages;
-    messages.push({
-      owner: 'mine',
+    const message = {
+      owner: this.state.clientName,
       text: this.state.text
-    });
+    };
+    const messages = this.state.messages;
+    messages.push(message);
     this.setState({messages});
-    this.state.socket.emit('sendMessageInRoom', this.state.text);      
+    emit('sendMessageInRoom', message);      
   }
 
   onChangeText = (text) => {
@@ -46,20 +48,12 @@ class ChatPage extends Component {
 
   recieveMessages = (message) => {
     const messages = this.state.messages;
-    console.log('in function recievemessages');
-    messages.push({
-      owner: 'others',
-      text: message
-    });
+    if (message.owner !== this.state.clientName)
+      messages.push(message);
     this.setState({messages});
   }
 
   render () {
-    console.log(this.state.messages);
-    this.state.socket.on && this.state.socket.on('forwardMessageToRoom', (message) => {
-      console.log('recieved ' + Date.now());
-      this.recieveMessages(message);
-    });
     return (
       <View>
         <Text style={styles.welcome}>Welcome to the Chat Room</Text>
@@ -67,7 +61,7 @@ class ChatPage extends Component {
         <Text style={styles.instructions}>You have entered into {this.state.confirmationRoom}</Text>
         <TextInput style={styles.input} onChangeText={this.onChangeText}/>
         <Button color = {styles.button.color} title= 'Press me please' onPress={this.onButtonPress}/>
-        <Chat messages = {this.state.messages}/>
+        <Chat messages = {this.state.messages} clientName={this.state.clientName}/>
       </View>
     );
   }
