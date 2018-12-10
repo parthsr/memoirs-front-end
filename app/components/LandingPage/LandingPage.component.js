@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import styles from './LandingPage.style';
 import {Button, Text, TextInput, View} from 'react-native';
 import {emit} from '../../service/Socket.service';
+import {musicPlayer} from '../../service/Music.service';
 import {noop} from 'lodash/noop';
 
 class LandingPage extends Component {
@@ -12,6 +13,11 @@ class LandingPage extends Component {
       roomName: '',
       clientName: ''
     };
+  }
+
+  componentDidMount = () => {
+    console.log('hi');
+    musicPlayer();
   }
 
   onButtonPress = () => {
