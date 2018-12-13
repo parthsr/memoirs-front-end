@@ -1,9 +1,10 @@
+import musicMapping from '../../config/musicMapping.config';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import styles from './LandingPage.style';
-import {Button, Text, TextInput, View} from 'react-native';
+import {AppState, Button, Picker, Text, TextInput, View} from 'react-native';
 import {emit} from '../../service/Socket.service';
-import {musicPlayer} from '../../service/Music.service';
+import {musicPlayer, musicPlayerstop} from '../../service/Music.service';
 import {noop} from 'lodash/noop';
 
 class LandingPage extends Component {
@@ -11,15 +12,13 @@ class LandingPage extends Component {
     super(props);
     this.state = {
       roomName: '',
-      clientName: ''
+      clientName: '',
+      selectedMusic: {}
     };
   }
-
-  componentDidMount = () => {
-    console.log('hi');
-    musicPlayer();
-  }
-
+componentDidMount = () => {
+  // musicPlayer(musicMapping[0].file);  
+}
   onButtonPress = () => {
     emit('joinRoom', this.state.roomName);
     this.props.navigation.navigate('ChatPage', {
@@ -39,6 +38,20 @@ class LandingPage extends Component {
       clientName: text
     });
   }
+  
+  selectValueChange = (itemValue, itemIndex) => {
+    this.setState({
+      selectedMusic: itemValue
+    });
+    musicPlayer(musicMapping[itemIndex]);  
+    // musicPlayerstop();
+
+  }
+
+  values = () => {
+    const items = musicMapping.map((item) => <Picker.Item key={item} label={item.title} value={item.title}/>);
+    return items;
+  }
 
   render () {
     return (
@@ -49,6 +62,12 @@ class LandingPage extends Component {
         <Text style={styles.instructions}>To get started, enter your name.</Text>
         <TextInput style={styles.input} onChangeText={this.onNameChangeText}/>
         <Button color = {styles.button.color} title= 'Press me please' onPress={this.onButtonPress}/>
+        <Picker
+          selectedValue={this.state.selectedMusic}
+          style={{height: 50, width: '100%'}}
+          onValueChange={this.selectValueChange}>
+          {this.values()}
+        </Picker>
       </View>
     );
   }
