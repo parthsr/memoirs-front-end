@@ -16,9 +16,7 @@ class LandingPage extends Component {
       selectedMusic: {}
     };
   }
-componentDidMount = () => {
-  // musicPlayer(musicMapping[0].file);  
-}
+
   onButtonPress = () => {
     emit('joinRoom', this.state.roomName);
     this.props.navigation.navigate('ChatPage', {

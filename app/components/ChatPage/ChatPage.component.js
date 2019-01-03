@@ -56,12 +56,11 @@ class ChatPage extends Component {
   render () {
     return (
       <View>
-        <Text style={styles.welcome}>Welcome to the Chat Room</Text>
+        <Text style={styles.welcome}>Welcome to the Chat Room   {this.state.confirmationRoom}</Text>
         <Text style={styles.instructions}>Enter the chat in the box please</Text>
-        <Text style={styles.instructions}>You have entered into {this.state.confirmationRoom}</Text>
+        <Chat messages = {this.state.messages} clientName={this.state.clientName}/>
         <TextInput style={styles.input} onChangeText={this.onChangeText}/>
         <Button color = {styles.button.color} title= 'Press me please' onPress={this.onButtonPress}/>
-        <Chat messages = {this.state.messages} clientName={this.state.clientName}/>
       </View>
     );
   }
