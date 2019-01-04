@@ -10,8 +10,9 @@ class LandingPage extends Component {
     super(props);
     this.state = {
       roomName: '',
-      clientName: ''
-    };
+      clientName: '',
+      songDetails: {}
+    };    
   }
 
   onButtonPress = () => {

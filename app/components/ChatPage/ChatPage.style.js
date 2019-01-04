@@ -17,7 +17,6 @@ export default {
     textAlign: 'center',
     borderColor: 'grey',
     borderWidth: 1,
-    marginTop: 30,
     minWidth: 150,
     padding: 5
   },
