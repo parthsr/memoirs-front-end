@@ -1,10 +1,8 @@
-import musicMapping from '../../config/musicMapping.config';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import styles from './LandingPage.style';
-import {Button, Picker, Text, TextInput, View} from 'react-native';
+import {Button, Text, TextInput, View} from 'react-native';
 import {emit} from '../../service/Socket.service';
-import {musicPlayer} from '../../service/Music.service';
 import {noop} from 'lodash/noop';
 
 class LandingPage extends Component {
@@ -13,8 +11,8 @@ class LandingPage extends Component {
     this.state = {
       roomName: '',
       clientName: '',
-      selectedMusic: {}
-    };
+      songDetails: {}
+    };    
   }
 
   onButtonPress = () => {
@@ -36,18 +34,6 @@ class LandingPage extends Component {
       clientName: text
     });
   }
-  
-  selectValueChange = (itemValue, itemIndex) => {
-    this.setState({
-      selectedMusic: itemValue
-    });
-    musicPlayer(musicMapping[itemIndex]);  
-  }
-
-  values = () => {
-    const items = musicMapping.map((item) => <Picker.Item key={item} label={item.title} value={item.title}/>);
-    return items;
-  }
 
   render () {
     return (
@@ -58,12 +44,6 @@ class LandingPage extends Component {
         <Text style={styles.instructions}>To get started, enter your name.</Text>
         <TextInput style={styles.input} onChangeText={this.onNameChangeText}/>
         <Button color = {styles.button.color} title= 'Press me please' onPress={this.onButtonPress}/>
-        <Picker
-          selectedValue={this.state.selectedMusic}
-          style={{height: 50, width: '100%'}}
-          onValueChange={this.selectValueChange}>
-          {this.values()}
-        </Picker>
       </View>
     );
   }

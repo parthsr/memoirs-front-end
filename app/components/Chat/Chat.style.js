@@ -28,7 +28,7 @@ export default {
   },
   scrollView: {
     paddingBottom: 10,
-    height: '70%'
+    height: '60%'
   }
 };
 

@@ -1,10 +1,12 @@
 import Chat from '../Chat/Chat.component';
+import musicMapping from '../../config/musicMapping.config';
 import noop from 'lodash/noop';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import styles from './ChatPage.style';
 import {Button, Text, TextInput, View} from 'react-native';
 import {emit, on} from '../../service/Socket.service';
+import {musicPlayer} from '../../service/Music.service';
 
 class ChatPage extends Component {
   constructor (props) {
@@ -15,10 +17,16 @@ class ChatPage extends Component {
       text: '',
       message: '',
       messages: [],
-      clientName: ''
+      clientName: '',
+      songDetails: {}
     };
     on('forwardMessageToRoom', (message) => {
       this.recieveMessages(message);
+    });
+    on('forwardSongToRoom', (songDetails) => {
+      this.setState({songDetails});
+      console.log('asdasdasdas', songDetails);
+      musicPlayer(musicMapping[songDetails.itemIndex]);
     });
   }
 
@@ -53,11 +61,16 @@ class ChatPage extends Component {
     this.setState({messages});
   }
 
+  onPressNavigate = () => {
+    this.props.navigation.navigate('MoodImprove');
+  }
+
   render () {
     return (
       <View>
         <Text style={styles.welcome}>Welcome to the Chat Room   {this.state.confirmationRoom}</Text>
         <Text style={styles.instructions}>Enter the chat in the box please</Text>
+        <Button color = {styles.button.color} title= 'Change Mood' onPress={this.onPressNavigate}/>
         <Chat messages = {this.state.messages} clientName={this.state.clientName}/>
         <TextInput style={styles.input} onChangeText={this.onChangeText}/>
         <Button color = {styles.button.color} title= 'Press me please' onPress={this.onButtonPress}/>
@@ -69,7 +82,8 @@ export default ChatPage;
 
 ChatPage.defaultProps = {
   navigation: {
-    getParam: noop
+    getParam: noop,
+    navigate: noop
   }
 };
 

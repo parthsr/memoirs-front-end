@@ -1,6 +1,6 @@
 import socketIOClient from 'socket.io-client';
 
-const client = socketIOClient('http://35.164.140.2:8080/chat');
+const client = socketIOClient('http://0.0.0.0:8080/chat');
 
 export default client;
 
