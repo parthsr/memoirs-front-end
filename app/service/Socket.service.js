@@ -1,6 +1,6 @@
 import socketIOClient from 'socket.io-client';
 
-const client = socketIOClient('http://0.0.0.0:8080/chat');
+const client = socketIOClient('https://memoirs-back.herokuapp.com/chat');
 
 export default client;
 
