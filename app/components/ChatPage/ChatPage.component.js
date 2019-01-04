@@ -1,10 +1,11 @@
+import backgroundMapping from '../../config/backgroundMapping.config';
 import Chat from '../Chat/Chat.component';
 import musicMapping from '../../config/musicMapping.config';
 import noop from 'lodash/noop';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import styles from './ChatPage.style';
-import {Button, Text, TextInput, View} from 'react-native';
+import {Button, Image, Text, TextInput, View} from 'react-native';
 import {emit, on} from '../../service/Socket.service';
 import {musicPlayer} from '../../service/Music.service';
 
@@ -25,7 +26,6 @@ class ChatPage extends Component {
     });
     on('forwardSongToRoom', (songDetails) => {
       this.setState({songDetails});
-      console.log('asdasdasdas', songDetails);
       musicPlayer(musicMapping[songDetails.itemIndex]);
     });
   }
@@ -67,7 +67,10 @@ class ChatPage extends Component {
 
   render () {
     return (
-      <View>
+      <View style={styles.overlappedContainer}>        
+        <View style={styles.backgroundView}>
+          <Image style={styles.image} source={{uri: backgroundMapping[this.props.screenProps.backgroundIndex].uri}}/>
+        </View>
         <Text style={styles.welcome}>Welcome to the Chat Room   {this.state.confirmationRoom}</Text>
         <Text style={styles.instructions}>Enter the chat in the box please</Text>
         <Button color = {styles.button.color} title= 'Change Mood' onPress={this.onPressNavigate}/>
@@ -84,10 +87,15 @@ ChatPage.defaultProps = {
   navigation: {
     getParam: noop,
     navigate: noop
+  },
+  screenProps: {
+    backgroundIndex: 0,
+    changeBackgroundAcrossApp: noop
   }
 };
 
 ChatPage.propTypes = {
-  navigation: PropTypes.object
+  navigation: PropTypes.object,
+  screenProps: PropTypes.object
 };
   
