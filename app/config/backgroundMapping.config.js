@@ -14,6 +14,11 @@ const backgroundMapping = [
     id: '2',
     uri: 'https://www.imore.com/sites/imore.com/files/styles/xlarge/public/field/image/2017/11/mountains-iphone-x-wallpaper-01.jpg',
     title: 'Mountain'
+  },
+  {
+    id: '3',
+    uri: '  https://media.idownloadblog.com/wp-content/uploads/2017/10/iPhone-X-blended-color-wallpaper-jeremy-goulet-idownloadblog-3_alt.jpg',
+    title: 'Rainbow colors'
   }
 ];
   
